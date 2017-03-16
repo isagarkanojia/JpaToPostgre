@@ -74,44 +74,66 @@ public class JpaToPostgre extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == this.BtnCopy)
 		{
-			String myString =this.area2.getText();
-			StringSelection stringSelection = new StringSelection(myString);
-			Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clpbrd.setContents(stringSelection, null);
-			JOptionPane.showMessageDialog(null, "Copied!");
+			copyToClipBoard();
 		}
 		if (e.getSource() == this.BtnConvert) {
-			String input = this.area.getText();
-			String med1 = input.replaceAll("[\"+\\t]", "");
-			String mediator = med1.replaceAll("[:]", "####");
-			StringBuffer output = new StringBuffer();
-			char[] med = mediator.toCharArray();
-			for (int x = 0; x < med.length; x++) {
-				int y = x;
-				if ((x > 2) && (med[x] >= 'A') && (med[x] <= 'Z') && (med[(y - 1)] >= '[')) {
-					output.append("_" + (char) (med[x] + ' '));
-				} else {
-					output.append(med[x]);
-				}
-			}
-			StringBuffer finalOutput = new StringBuffer();
-			char[] arrayOfChar1;
-			int j = (arrayOfChar1 = output.toString().toCharArray()).length;
-			for (int i = 0; i < j; i++) {
-				char c = arrayOfChar1[i];
-				if ((c >= 'A') && (c <= 'Z')) {
-					finalOutput.append((char) (c + ' '));
-				} else {
-					finalOutput.append(c);
-				}
-			}
-			this.area2.setText(finalOutput.toString());
-			JOptionPane.showMessageDialog(null, "Converted!");
+			convert();
 		}
 		if (e.getSource() == this.BtnClear) {
-			this.area.setText("");
-			this.area2.setText("");
-			JOptionPane.showMessageDialog(null, "Cleared!");
+			clear();
 		}
+	}
+
+	private void clear() {
+		this.area.setText("");
+		this.area2.setText("");
+		JOptionPane.showMessageDialog(null, "Cleared!");
+	}
+
+	private void convert() {
+		String input = this.area.getText();
+		String med1 = input.replaceAll("[\"+\\t]", "");
+		String mediator = med1.replaceAll("[:]", "####");
+		StringBuffer output = new StringBuffer();
+		char[] med = mediator.toCharArray();
+		for(int x=0; x<med.length;x++)
+		{
+			
+			int y=x;
+			if( y-1==0 && med[x]>=65 && med[x]<=90 && med[0]>=91)
+			{
+				output.append("_"+(char)(med[x]+32));
+			}
+			else if(x>1 && med[x]>=65 && med[x]<=90  && med[y-1]>=91)
+			{
+				output.append("_"+(char)(med[x]+32));
+			}
+			else
+			{
+				output.append(med[x]);
+			}
+			
+		}
+		StringBuffer finalOutput = new StringBuffer();
+		char[] arrayOfChar1;
+		int j = (arrayOfChar1 = output.toString().toCharArray()).length;
+		for (int i = 0; i < j; i++) {
+			char c = arrayOfChar1[i];
+			if ((c >= 'A') && (c <= 'Z')) {
+				finalOutput.append((char) (c + ' '));
+			} else {
+				finalOutput.append(c);
+			}
+		}
+		this.area2.setText(finalOutput.toString());
+		JOptionPane.showMessageDialog(null, "Converted!");
+	}
+
+	private void copyToClipBoard() {
+		String myString =this.area2.getText();
+		StringSelection stringSelection = new StringSelection(myString);
+		Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clpbrd.setContents(stringSelection, null);
+		JOptionPane.showMessageDialog(null, "Copied!");
 	}
 }
